@@ -20,11 +20,6 @@ public class Category {
     @Column(name = "name", nullable = false)
     private String name;
 
-    @NotNull
-    @ColumnDefault("current_timestamp()")
-    @Column(name = "created_at", nullable = false)
-    private Instant createdAt;
-
     public Integer getId() {
         return id;
     }
@@ -41,12 +36,5 @@ public class Category {
         this.name = name;
     }
 
-    public Instant getCreatedAt() {
-        return createdAt;
-    }
-
-    public void setCreatedAt(Instant createdAt) {
-        this.createdAt = createdAt;
-    }
 
 }

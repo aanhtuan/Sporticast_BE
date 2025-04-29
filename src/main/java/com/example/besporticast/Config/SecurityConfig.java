@@ -14,7 +14,9 @@ public class SecurityConfig {
         http
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/api/auth/**").permitAll() // Cho phép public endpoint này
+                        .requestMatchers("/api/auth/**",
+                                "/api/**"
+                        ).permitAll() // Cho phép public endpoint này
                         .anyRequest().authenticated()
                 )
                 .httpBasic(Customizer.withDefaults());
