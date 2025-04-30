@@ -16,7 +16,6 @@ import java.util.Map;
 @RestController
 @RequestMapping("/api/auth")
 public class AuthController {
-
     @Autowired
     private UserService userService;
 

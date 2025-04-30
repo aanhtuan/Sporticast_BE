@@ -15,7 +15,7 @@ public class SecurityConfig {
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/api/auth/**",
-                                "/api/**"
+                                "/users/**"
                         ).permitAll() // Cho phép public endpoint này
                         .anyRequest().authenticated()
                 )

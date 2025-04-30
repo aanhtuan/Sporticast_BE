@@ -8,7 +8,7 @@ import org.springframework.context.annotation.Bean;
 
 
 @Data
-public class    RegisterRequest {
+public class RegisterRequest {
 
     @NotEmpty(message = "Vui lòng nhập tên người dùng")
     public String name;
