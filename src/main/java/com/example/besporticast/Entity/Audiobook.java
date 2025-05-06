@@ -50,4 +50,11 @@ public class Audiobook {
     @NotNull
     @Column(name = "category", nullable = false)
     private String category;
+    @Column(name = "audio_url", nullable = false)
+    private String audioUrl;
+    @Column(name = "description", nullable = false)
+    private String description;
+    @Column(name = "language",nullable = false)
+    private String language;
+
 }
