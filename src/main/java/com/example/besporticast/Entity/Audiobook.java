@@ -7,7 +7,6 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
-import org.hibernate.annotations.ColumnDefault;
 
 @Entity
 @Table(name = "audiobooks")
@@ -17,6 +16,7 @@ import org.hibernate.annotations.ColumnDefault;
 @ToString
 public class Audiobook {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false, length = 64)
     private String id; // Kotlin dùng String cho ID
 
