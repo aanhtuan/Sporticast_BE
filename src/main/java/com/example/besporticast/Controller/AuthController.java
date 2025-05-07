@@ -28,6 +28,8 @@ public class AuthController {
 
     }
 
+
+
     @PostMapping("/login")
     public ResponseEntity<Map<String, String>> login(@Valid @RequestBody LoginRequest request) {
         boolean success = userService.loginUser(request.email, request.password);

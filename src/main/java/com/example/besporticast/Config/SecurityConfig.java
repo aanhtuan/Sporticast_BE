@@ -16,7 +16,8 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/api/auth/**",
                                 "api/books/**",
-                                "/users/**"
+                                "/users/**",
+                                "/admin/**"
                         ).permitAll() // Cho phép public endpoint này
                         .anyRequest().authenticated()
                 )
