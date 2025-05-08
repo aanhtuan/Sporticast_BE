@@ -16,13 +16,13 @@ public class Ad_EditAudioBookService {
     public Audiobook updateAudioBook(Long  id, AudioBookDTO dto) {
         Audiobook existingBook = audiobookRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Book not found with ID: " + id));
+
          existingBook.setTitle(dto.getTitle());
          existingBook.setAuthor(dto.getAuthor());
          existingBook.setDescription(dto.getDescription());
          existingBook.setImageUrl(dto.getImageUrl());
          existingBook.setAudioUrl(dto.getAudioUrl());
          existingBook.setDuration(dto.getDuration());
-         existingBook.setRating(dto.getRating());
          existingBook.setCategory(dto.getCategory());
          existingBook.setListenCount(dto.getListenCount());
          existingBook.setRating(dto.getRating());

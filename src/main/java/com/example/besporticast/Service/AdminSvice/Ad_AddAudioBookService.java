@@ -24,6 +24,7 @@ public class Ad_AddAudioBookService  {
         audiobook.setRating(bookDTO.getRating());
         audiobook.setListenCount(bookDTO.getListenCount());
         audiobook.setAudioUrl(bookDTO.getAudioUrl());
+        audiobook.setImageUrl(bookDTO.getImageUrl());
         audiobook.setDuration(bookDTO.getDuration());
 
         audiobookRepository.save(audiobook);
