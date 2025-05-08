@@ -8,7 +8,7 @@ import java.awt.print.Book;
 import java.util.List;
 
 @Repository
-public interface AudiobookRepository extends JpaRepository<Audiobook, String> {
+public interface AudiobookRepository extends JpaRepository<Audiobook, Long> {
     List <Audiobook> findByTitleContainingIgnoreCaseOrAuthorContainingIgnoreCase(String title, String author);
 
 }
