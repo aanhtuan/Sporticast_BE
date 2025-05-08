@@ -18,7 +18,7 @@ public class Audiobook {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false, length = 64)
-    private String id; // Kotlin dùng String cho ID
+    private Integer id; // Kotlin dùng String cho ID
 
     @Size(max = 255)
     @NotNull
