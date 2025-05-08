@@ -15,7 +15,6 @@ public class Ad_AddAudioBookService  {
 
     public List<Audiobook> addAudioBook(AudioBookDTO bookDTO) {
         Audiobook audiobook = new Audiobook();
-
         audiobook.setAuthor(bookDTO.getAuthor());
         audiobook.setTitle(bookDTO.getTitle());
         audiobook.setDescription(bookDTO.getDescription());
@@ -23,6 +22,7 @@ public class Ad_AddAudioBookService  {
         audiobook.setCategory(bookDTO.getCategory());
         audiobook.setRating(bookDTO.getRating());
         audiobook.setListenCount(bookDTO.getListenCount());
+        audiobook.setImageUrl(bookDTO.getImageUrl());
         audiobook.setAudioUrl(bookDTO.getAudioUrl());
         audiobook.setDuration(bookDTO.getDuration());
 

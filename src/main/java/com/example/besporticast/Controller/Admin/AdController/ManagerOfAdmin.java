@@ -1,6 +1,7 @@
 package com.example.besporticast.Controller.Admin.AdController;
 
 import com.example.besporticast.Service.AdminSvice.Ad_AddAudioBookService;
+import com.example.besporticast.Service.AdminSvice.Ad_EditAudioBookService;
 import com.example.besporticast.Service.AdminSvice.Ad_ListBookService;
 import com.example.besporticast.Service.AdminSvice.Ad_ListUsersService;
 import com.example.besporticast.DTO.Request.AdminRquest.AudioBookDTO;
@@ -25,6 +26,8 @@ public class ManagerOfAdmin {
     private Ad_ListBookService ad_ListBookService;
     @Autowired
     private Ad_AddAudioBookService ad_AddAudioBookService;
+    @Autowired
+    Ad_EditAudioBookService ad_EditAudioBookService;
 
     @GetMapping("/users")
     public List<User> getAllUsers() {
@@ -40,6 +43,17 @@ public class ManagerOfAdmin {
         System.out.println(">>> Reached addAudioBook()");
         List<Audiobook> list = ad_AddAudioBookService.addAudioBook(dto);
         return ResponseEntity.status(HttpStatus.CREATED).body(list);
+    }
+    @PutMapping("/admin/edit_audiobook/{id}")
+    public ResponseEntity<?> updateAudioBook(@PathVariable Long id, @RequestBody AudioBookDTO dto){
+
+        try{
+            Audiobook updateAudioBook = ad_EditAudioBookService.updateAudioBook(id, dto);
+            return ResponseEntity.ok(updateAudioBook);
+
+        }catch (RuntimeException e){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        }
     }
 
 

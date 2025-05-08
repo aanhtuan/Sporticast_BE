@@ -31,12 +31,17 @@ public class SecurityConfig {
         http
                 .csrf(csrf -> csrf.disable())  // Disable CSRF, thường không cần cho API REST
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/api/auth/**",
-                                "api/books/**",
-                                "/users/**",
-                                "/admin/**"
-                        ).permitAll() // Cho phép public endpoint này
-                        .anyRequest().authenticated()
+
+
+
+
+                       .requestMatchers("/api/auth/**",
+                               "/api/books/**",
+                               "/users/**",
+                               "/admin/**"
+
+                      ).permitAll() // Cho phép public endpoint này
+                       .anyRequest().authenticated()
                 )
                 .sessionManagement(sess -> sess.sessionCreationPolicy(SessionCreationPolicy.STATELESS)) // Không sử dụng session, dùng token JWT
                 .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);  // Đưa JWT filter vào trước khi filter xác thực mặc định của Spring Security
