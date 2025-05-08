@@ -5,6 +5,8 @@ import lombok.Data;
 
 @Data
 public class AudioBookDTO {
+    @NotNull
+    private Integer id;
 
     @NotNull(message = "Yêu cầu thêm tên sách")
     private String title;
