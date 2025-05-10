@@ -1,12 +1,14 @@
 package com.example.besporticast.Controller.Admin.AdController;
 
+import com.example.besporticast.DTO.Request.AdminRquest.AudioBookDTO;
+import com.example.besporticast.Entity.Audiobook;
+import com.example.besporticast.Entity.User;
 import com.example.besporticast.Service.AdminSvice.Ad_AddAudioBookService;
 import com.example.besporticast.Service.AdminSvice.Ad_EditAudioBookService;
 import com.example.besporticast.Service.AdminSvice.Ad_ListBookService;
 import com.example.besporticast.Service.AdminSvice.Ad_ListUsersService;
-import com.example.besporticast.DTO.Request.AdminRquest.AudioBookDTO;
-import com.example.besporticast.Entity.Audiobook;
-import com.example.besporticast.Entity.User;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,14 +21,17 @@ import java.util.List;
 @CrossOrigin(origins = "*")
 public class ManagerOfAdmin {
 
-    @Autowired
-    Ad_ListUsersService ad_ListUsersService;
+    private static final Logger logger = LoggerFactory.getLogger(ManagerOfAdmin.class);
 
     @Autowired
-    Ad_EditAudioBookService ad_EditAudioBookService;
+    private Ad_ListUsersService ad_ListUsersService;
+
+    @Autowired
+    private Ad_EditAudioBookService ad_EditAudioBookService;
 
     @Autowired
     private Ad_ListBookService ad_ListBookService;
+
     @Autowired
     private Ad_AddAudioBookService ad_AddAudioBookService;
 
@@ -34,6 +39,7 @@ public class ManagerOfAdmin {
     public List<User> getAllUsers() {
         return ad_ListUsersService.getAllUsers();
     }
+
     @GetMapping("/audiobook")
     public List<Audiobook> adgetAllAudiobook() {
         return ad_ListBookService.AdgetAllAudiobooks();
@@ -41,24 +47,26 @@ public class ManagerOfAdmin {
 
     @PostMapping("/add_audiobook")
     public ResponseEntity<List<Audiobook>> addAudioBook(@RequestBody AudioBookDTO dto) {
-        System.out.println(">>> Reached addAudioBook()");
+        logger.info(">>> Reached addAudioBook(), DTO: {}", dto);
         List<Audiobook> list = ad_AddAudioBookService.addAudioBook(dto);
         return ResponseEntity.status(HttpStatus.CREATED).body(list);
     }
 
     @PutMapping("/edit_audiobook/{id}")
-    public ResponseEntity<?> updateAudioBook(@PathVariable Long id, @RequestBody AudioBookDTO dto){
-
-        try{
+    public ResponseEntity<?> updateAudioBook(@PathVariable Long id, @RequestBody AudioBookDTO dto) {
+        logger.info(">>> PUT /admin/edit_audiobook/{} called with DTO: {}", id, dto);
+        try {
             Audiobook updateAudioBook = ad_EditAudioBookService.updateAudioBook(id, dto);
             return ResponseEntity.ok(updateAudioBook);
-
-        }catch (RuntimeException e){
+        } catch (RuntimeException e) {
+            logger.error("Error updating audiobook ID {}: {}", id, e.getMessage());
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         }
     }
 
-
-
-
+    @DeleteMapping("/delete_book/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)  // Trả về mã trạng thái 204 No Content khi xóa thành công
+    public void deleteBook(@PathVariable Long id) {
+        ad_AddAudioBookService.deleteBook(id);
+    }
 }

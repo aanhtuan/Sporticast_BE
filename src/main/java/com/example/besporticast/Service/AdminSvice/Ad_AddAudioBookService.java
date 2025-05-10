@@ -31,4 +31,13 @@ public class Ad_AddAudioBookService  {
 
         return audiobookRepository.findAll();
     }
+
+    public void deleteBook(Long id) {
+        // Kiểm tra xem sách có tồn tại hay không
+        Audiobook audiobook = audiobookRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Sách không tồn tại!"));
+
+        // Tiến hành xóa sách
+        audiobookRepository.delete(audiobook);
+    }
 }
