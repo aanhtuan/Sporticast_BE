@@ -48,6 +48,7 @@ public class AuthController {
             response.put("message", "Login Success");
             response.put("token", loginData.get("token"));
             response.put("is_admin", loginData.get("is_admin"));
+            response.put("user_id", loginData.get("user_id"));
             return ResponseEntity.ok(response);
         } else {
             response.put("message", "Login Failed");

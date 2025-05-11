@@ -55,7 +55,8 @@ public class UserService {
                 String token = jwtUtil.generateToken(user.getEmail());
                 Map<String, Object> data = new HashMap<>();
                 data.put("token", token);
-                data.put("is_admin", user.getIs_admin()); // chú ý getter
+                data.put("is_admin", user.getIs_admin());
+                data.put("user_id", user.getId());
                 return data;
             }
         }
