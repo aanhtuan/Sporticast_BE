@@ -3,10 +3,7 @@ package com.example.besporticast.Controller.Admin.AdController;
 import com.example.besporticast.DTO.Request.AdminRquest.AudioBookDTO;
 import com.example.besporticast.Entity.Audiobook;
 import com.example.besporticast.Entity.User;
-import com.example.besporticast.Service.AdminSvice.Ad_AddAudioBookService;
-import com.example.besporticast.Service.AdminSvice.Ad_EditAudioBookService;
-import com.example.besporticast.Service.AdminSvice.Ad_ListBookService;
-import com.example.besporticast.Service.AdminSvice.Ad_ListUsersService;
+import com.example.besporticast.Service.AdminSvice.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,6 +31,8 @@ public class ManagerOfAdmin {
 
     @Autowired
     private Ad_AddAudioBookService ad_AddAudioBookService;
+    @Autowired
+    private Ad_DeleteUserService ad_DeleteUserService;
 
     @GetMapping("/users")
     public List<User> getAllUsers() {
@@ -69,4 +68,11 @@ public class ManagerOfAdmin {
     public void deleteBook(@PathVariable Long id) {
         ad_AddAudioBookService.deleteBook(id);
     }
+    @DeleteMapping("/delete_user/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void deleteUser(@PathVariable Long id){
+        ad_DeleteUserService.deleteUser(id);
+
+    }
 }
+
