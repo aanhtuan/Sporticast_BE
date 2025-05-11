@@ -11,7 +11,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.awt.print.Book;
 import java.util.List;
+import java.util.Set;
 
 @RestController
 @RequestMapping("/admin")
@@ -33,6 +35,8 @@ public class ManagerOfAdmin {
     private Ad_AddAudioBookService ad_AddAudioBookService;
     @Autowired
     private Ad_DeleteUserService ad_DeleteUserService;
+    @Autowired
+    Ad_AddFavouriteService ad_AddFavouriteService;
 
     @GetMapping("/users")
     public List<User> getAllUsers() {
@@ -73,6 +77,18 @@ public class ManagerOfAdmin {
     public void deleteUser(@PathVariable Long id){
         ad_DeleteUserService.deleteUser(id);
 
+    }
+    @PostMapping("/{userId}/favorites/{bookId}")
+    public ResponseEntity<String> addFavourite(@PathVariable Long userId,
+                                               @PathVariable Long bookId) {
+        ad_AddFavouriteService.addFavourite(userId, bookId);
+        return ResponseEntity.ok("Book added to Favourites");
+
+    }
+    @GetMapping("/{userId}/favorites")
+    public ResponseEntity<Set<Audiobook>> getFavoriteBooks(@PathVariable Long userId) {
+        Set<Audiobook> favorites = ad_AddFavouriteService.getFavoriteBooks(userId);
+        return ResponseEntity.ok(favorites);
     }
 }
 

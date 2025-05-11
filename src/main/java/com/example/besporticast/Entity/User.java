@@ -1,12 +1,16 @@
 package com.example.besporticast.Entity;
 
 import jakarta.persistence.*;
+import com.example.besporticast.Entity.Audiobook;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.Data;
 import org.hibernate.annotations.ColumnDefault;
 
 import java.time.Instant;
+import java.util.HashSet;
+import java.util.Set;
+
 @Data
 @Entity
 @Table(name = "users")
@@ -48,5 +52,18 @@ public class User {
     @ColumnDefault("current_timestamp()")
     @Column(name = "updated_at", nullable = false)
     private Instant updatedAt;
+
+    @ManyToMany
+    private Set<Audiobook> favourites = new HashSet<>();
+
+    public Set<Audiobook> getFavourites() {
+        return favourites;
+    }
+
+
+    public void setFavourites(Set<Audiobook> favourites) {
+        this.favourites = favourites;
+    }
+
 
 }
