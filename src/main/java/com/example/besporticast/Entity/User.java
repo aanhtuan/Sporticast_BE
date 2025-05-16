@@ -53,12 +53,17 @@ public class User {
     @Column(name = "updated_at", nullable = false)
     private Instant updatedAt;
 
+    @Column(name = "is_verified")
+    private boolean isVerified = false;
+
     @ManyToMany
     private Set<Audiobook> favourites = new HashSet<>();
 
     public Set<Audiobook> getFavourites() {
         return favourites;
     }
+
+
 
 
     public void setFavourites(Set<Audiobook> favourites) {

@@ -7,6 +7,7 @@ import com.example.besporticast.Repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
 import java.util.Set;
 
 @Service
@@ -34,6 +35,18 @@ public class Ad_AddFavouriteService {
                 .orElseThrow(() -> new RuntimeException("User not found"));
         return user.getFavourites();
     }
+
+    public void removeFavorite(Long userId, Long audiobookId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        Audiobook audiobook = audiobookRepository.findById(audiobookId)
+                .orElseThrow(() -> new RuntimeException("Book not found"));
+
+        user.getFavourites().remove(audiobook);
+        userRepository.save(user);
+    }
+
 
 
 }

@@ -4,6 +4,7 @@ import com.example.besporticast.Entity.Audiobook;
 import com.example.besporticast.Service.AdminSvice.Ad_AddFavouriteService;
 import com.example.besporticast.Service.AudioBookService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -26,7 +27,7 @@ public class BookController {
 
     @PostMapping("/{userId}/favorites/{bookId}")
     public ResponseEntity<String> addFavourite(@PathVariable Long userId,
-                                               @PathVariable Long bookId) {
+                                                 @PathVariable Long bookId) {
         ad_AddFavouriteService.addFavourite(userId, bookId);
         return ResponseEntity.ok("Book added to Favourites");
     }
@@ -36,4 +37,13 @@ public class BookController {
         Set<Audiobook> favorites = ad_AddFavouriteService.getFavoriteBooks(userId);
         return ResponseEntity.ok(favorites);
     }
+
+    @DeleteMapping("/{userId}/favorites/{bookId}")
+    public void removeFavorite(
+            @PathVariable Long userId,
+            @PathVariable Long bookId
+    ) {
+        ad_AddFavouriteService.removeFavorite(userId,bookId);
+    }
+
 }

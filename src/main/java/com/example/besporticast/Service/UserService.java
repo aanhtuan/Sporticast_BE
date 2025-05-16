@@ -1,12 +1,15 @@
 package com.example.besporticast.Service;
 
+import com.example.besporticast.DTO.Request.UserDto;
 import com.example.besporticast.Entity.User;
 import com.example.besporticast.Repository.UserRepository;
 import com.example.besporticast.Util.JwtUtil;
 import lombok.val;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.PathVariable;
 
 import java.time.Instant;
 import java.util.HashMap;
@@ -21,6 +24,15 @@ public class UserService {
     private final BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
     @Autowired
     private JwtUtil jwtUtil;
+
+    public void updateUserVerifiedStatus(String email, boolean verified) {
+        Optional<User> userOpt = userRepository.findByEmail(email);
+        if (userOpt.isPresent()) {
+            User user = userOpt.get();
+            user.setVerified(verified);
+            userRepository.save(user);
+        }
+    }
 
 
     public String registerUser(String name, String email, String password) {
@@ -57,10 +69,23 @@ public class UserService {
                 data.put("token", token);
                 data.put("is_admin", user.getIs_admin());
                 data.put("user_id", user.getId());
+                data.put("verified", user.isVerified()); // ✅ thêm dòng này
                 return data;
             }
         }
         return null;
+    }
+
+
+    public ResponseEntity<UserDto> getUserById(@PathVariable Long id) {
+        Optional<User> user = userRepository.findById(id);
+        if (user.isPresent()) {
+            User u = user.get();
+            UserDto dto = new UserDto(u.getName(), u.getAvatar());
+            return ResponseEntity.ok(dto);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
     }
 
 }

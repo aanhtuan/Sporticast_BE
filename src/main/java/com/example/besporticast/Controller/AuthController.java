@@ -2,15 +2,14 @@ package com.example.besporticast.Controller;
 
 import com.example.besporticast.DTO.Request.LoginRequest;
 import com.example.besporticast.DTO.Request.RegisterRequest;
+import com.example.besporticast.DTO.Request.Response.LoginResponse;
+import com.example.besporticast.DTO.Request.Response.VerifyResponse;
+import com.example.besporticast.Service.AuthService;
 import com.example.besporticast.Service.UserService;
-import com.example.besporticast.Util.JwtUtil;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
@@ -21,13 +20,10 @@ import java.util.Map;
 public class AuthController {
 
     @Autowired
-    private AuthenticationManager authenticationManager;
-
-    @Autowired
     private UserService userService;
 
     @Autowired
-    private JwtUtil jwtUtil;
+    private AuthService authService;
 
     @PostMapping("/register")
     public ResponseEntity<Map<String, String>> register(@Valid @RequestBody RegisterRequest request) {
@@ -40,21 +36,60 @@ public class AuthController {
 
 
     @PostMapping("/login")
-    public ResponseEntity<Map<String, Object>> login(@RequestBody LoginRequest request) {
-        Map<String, Object> response = new HashMap<>();
+    public ResponseEntity<?> login(@RequestBody LoginRequest request) {
         Map<String, Object> loginData = userService.loginUser(request.email, request.password);
 
-        if (loginData != null) {
-            response.put("message", "Login Success");
-            response.put("token", loginData.get("token"));
-            response.put("is_admin", loginData.get("is_admin"));
-            response.put("user_id", loginData.get("user_id"));
-            return ResponseEntity.ok(response);
-        } else {
-            response.put("message", "Login Failed");
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(response);
+        if (loginData == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(
+                    Map.of("status", "error", "message", "Login Failed")
+            );
         }
+
+        // Nếu chưa xác minh OTP
+        if (Boolean.FALSE.equals(loginData.get("verified"))) {
+            authService.sendVerificationCode(request.email);
+            return ResponseEntity.status(HttpStatus.OK).body(
+                    Map.of(
+                            "status", "verify",
+                            "message", "Vui lòng xác minh email",
+                            "email", request.email
+                    )
+            );
+        }
+
+        return ResponseEntity.ok(
+                new LoginResponse(
+                        "success",
+                        (Boolean) loginData.get("is_admin"),
+                        "Login Success",
+                        (String) loginData.get("token"),
+                        ((Number) loginData.get("user_id")).longValue(),
+                        request.email
+                )
+        );
     }
+
+
+
+    @PostMapping("/verify-code")
+    public ResponseEntity<VerifyResponse> verifyCode(
+            @RequestParam("email") String email,
+            @RequestParam("code") String code) {
+
+        // Kiểm tra mã xác thực
+        boolean isValid = authService.verifyCode(email, code);
+
+        if (isValid) {
+            userService.updateUserVerifiedStatus(email, true);
+            return ResponseEntity.ok(new VerifyResponse("Verify Success")); // 200 OK
+        } else {
+            return ResponseEntity
+                    .status(HttpStatus.BAD_REQUEST) // 400
+                    .body(new VerifyResponse("Invalid or expired verification code."));
+        }
+
+    }
+
 
 
 }
