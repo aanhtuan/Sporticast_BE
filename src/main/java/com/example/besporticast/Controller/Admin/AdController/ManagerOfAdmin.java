@@ -1,7 +1,9 @@
 package com.example.besporticast.Controller.Admin.AdController;
 
+import com.example.besporticast.DTO.Request.AdminRquest.Ad_ChapterDTO;
 import com.example.besporticast.DTO.Request.AdminRquest.AudioBookDTO;
 import com.example.besporticast.Entity.Audiobook;
+import com.example.besporticast.Entity.Chapter;
 import com.example.besporticast.Entity.User;
 import com.example.besporticast.Service.AdminSvice.*;
 import org.slf4j.Logger;
@@ -35,6 +37,8 @@ public class ManagerOfAdmin {
     private Ad_AddAudioBookService ad_AddAudioBookService;
     @Autowired
     private Ad_DeleteUserService ad_DeleteUserService;
+    @Autowired
+    private Ad_ChapterService ad_ChapterService;
 
 
     @GetMapping("/users")
@@ -76,6 +80,11 @@ public class ManagerOfAdmin {
     public void deleteUser(@PathVariable Long id){
         ad_DeleteUserService.deleteUser(id);
 
+    }
+    @PostMapping("/create_chapters")
+    public ResponseEntity<Chapter> addChapter(@RequestBody Ad_ChapterDTO dto) {
+        Chapter created = ad_ChapterService.createChapter(dto);
+        return ResponseEntity.ok(created);
     }
 
 }
