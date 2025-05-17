@@ -3,8 +3,11 @@ package com.example.besporticast.Service.AdminSvice;
 import com.example.besporticast.DTO.Request.AdminRquest.AudioBookDTO;
 import com.example.besporticast.Entity.Audiobook;
 import com.example.besporticast.Repository.AudiobookRepository;
+import com.example.besporticast.Repository.FavoriteRepository;
+import com.example.besporticast.Repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -12,7 +15,10 @@ import java.util.List;
 public class Ad_AddAudioBookService  {
     @Autowired
     private AudiobookRepository audiobookRepository;
-
+    @Autowired
+    private FavoriteRepository favoriteRepository;
+    @Autowired
+    private UserRepository userRepository;
     public List<Audiobook> addAudioBook(AudioBookDTO bookDTO) {
         Audiobook audiobook = new Audiobook();
 
@@ -32,12 +38,16 @@ public class Ad_AddAudioBookService  {
         return audiobookRepository.findAll();
     }
 
-    public void deleteBook(Long id) {
-        // Kiểm tra xem sách có tồn tại hay không
-        Audiobook audiobook = audiobookRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("Sách không tồn tại!"));
+    @Transactional
+    public void deleteBook(Long bookId) {
+        Audiobook audiobook = audiobookRepository.findById(bookId)
+                .orElseThrow(() -> new RuntimeException("Audiobook not found"));
 
-        // Tiến hành xóa sách
+        // Xoá tất cả user-favourite liên quan
+        userRepository.removeAllFavouritesWithBookId(bookId); // viết custom query
+
+        // Bây giờ có thể xoá audiobook
         audiobookRepository.delete(audiobook);
     }
+
 }
