@@ -8,4 +8,5 @@ import java.util.List;
 
 public interface ChapterRepository extends JpaRepository<Chapter, Integer> {
      List<Chapter> findByAudiobookIdOrderByOrderAsc (Integer audiobookId);
+     int countByAudiobookId(Integer audiobookId);
 }
