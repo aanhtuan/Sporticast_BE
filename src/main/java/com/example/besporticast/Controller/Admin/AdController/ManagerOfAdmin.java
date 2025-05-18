@@ -2,6 +2,7 @@ package com.example.besporticast.Controller.Admin.AdController;
 
 import com.example.besporticast.DTO.Request.AdminRquest.Ad_ChapterDTO;
 import com.example.besporticast.DTO.Request.AdminRquest.AudioBookDTO;
+import com.example.besporticast.DTO.Request.AdminRquest.ChapterLimitRequest;
 import com.example.besporticast.Entity.Audiobook;
 import com.example.besporticast.Entity.Chapter;
 import com.example.besporticast.Entity.User;
@@ -39,6 +40,8 @@ public class ManagerOfAdmin {
     private Ad_DeleteUserService ad_DeleteUserService;
     @Autowired
     private Ad_ChapterService ad_ChapterService;
+    @Autowired
+    private Ad_AudioBookService audioBookService;
 
 
     @GetMapping("/users")
@@ -81,11 +84,31 @@ public class ManagerOfAdmin {
         ad_DeleteUserService.deleteUser(id);
 
     }
-    @PostMapping("/create_chapters")
-    public ResponseEntity<Chapter> addChapter(@RequestBody Ad_ChapterDTO dto) {
-        Chapter created = ad_ChapterService.createChapter(dto);
-        return ResponseEntity.ok(created);
+    @PutMapping("/{id}/chapter-limit")
+    public ResponseEntity<?> setChapterLimit(
+            @PathVariable("id") Integer audiobookId,
+            @RequestBody ChapterLimitRequest request) {
+        Audiobook updated = ad_ChapterService.setChapterLimit(audiobookId, request.getChapterLimit());
+        return ResponseEntity.ok().build();
     }
 
+    /**
+     * Thêm chương mới cho audiobook, giới hạn theo chapterLimit
+     */
+    @PostMapping("/{audiobookId}/chapters")
+    public ResponseEntity<?> addChapter(@PathVariable Integer audiobookId,
+                                        @RequestBody Ad_ChapterDTO request) {
+        try {
+            Chapter chapter = ad_ChapterService.addChapter(
+                    audiobookId,
+                    request.getTitle(),
+                    request.getAudioUrl(),
+                    request.getDuration()
+            );
+            return ResponseEntity.ok("✅ Đã thêm chương: " + chapter.getTitle());
+        } catch (IllegalStateException e) {
+            return ResponseEntity.badRequest().body("❌ " + e.getMessage());
+        }
+    }
 }
 

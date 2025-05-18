@@ -7,6 +7,4 @@ public class Ad_ChapterDTO {
     private String title;
     private String audioUrl;
     private Integer duration;
-    private Long audiobookId;
-    private Integer order;
 }

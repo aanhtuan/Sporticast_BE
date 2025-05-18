@@ -56,5 +56,9 @@ public class Audiobook {
     private String description;
     @Column(name = "language",nullable = false)
     private String language;
+    // Audiobook.java
+    @Column(name = "chapter_limit",nullable = false)
+    private Integer chapterLimit=0;
+
 
 }

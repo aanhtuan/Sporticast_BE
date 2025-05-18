@@ -1,38 +1,51 @@
 package com.example.besporticast.Service.AdminSvice;
 
-import com.example.besporticast.DTO.Request.AdminRquest.Ad_ChapterDTO;
 import com.example.besporticast.Entity.Audiobook;
 import com.example.besporticast.Entity.Chapter;
-import com.example.besporticast.Repository.AudiobookRepository;
 import com.example.besporticast.Repository.ChapterRepository;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
-import java.util.List;
+
 @Service
+@RequiredArgsConstructor
 public class Ad_ChapterService {
+
     private final ChapterRepository chapterRepository;
-    private final AudiobookRepository audiobookRepository;
+    private final Ad_AudioBookService audiobookService;
 
-    public Ad_ChapterService(ChapterRepository chapterRepo, AudiobookRepository audiobookRepo) {
-        this.chapterRepository = chapterRepo;
-        this.audiobookRepository = audiobookRepo;
-    }
+    // Thêm một chương mới cho audiobook có kiểm tra giới hạn
+    public Chapter addChapter(Integer audiobookId, String title, String audioUrl, Integer duration) {
+        Audiobook audiobook = audiobookService.getAudiobookById(audiobookId);
 
-    public Chapter createChapter(Ad_ChapterDTO dto) {
-        Audiobook audiobook = audiobookRepository.findById(dto.getAudiobookId())
-                .orElseThrow(() -> new RuntimeException("Audiobook not found"));
+        int currentCount = chapterRepository.countByAudiobookId(audiobookId);
+        Integer limit = audiobook.getChapterLimit();
+
+        if (limit != null && currentCount >= limit) {
+            throw new IllegalStateException("Đã đạt giới hạn số chương");
+        }
 
         Chapter chapter = new Chapter();
         chapter.setAudiobook(audiobook);
-        chapter.setTitle(dto.getTitle());
-        chapter.setAudioUrl(dto.getAudioUrl());
-        chapter.setDuration(dto.getDuration()); // ✅ Đảm bảo không null
-        chapter.setOrder(dto.getOrder());
-        chapter.setCreatedAt(Instant.now()); // ✅ Phải gán thủ công
+        chapter.setTitle(title);
+        chapter.setAudioUrl(audioUrl);
+        chapter.setDuration(duration);
+        chapter.setOrder(currentCount + 1);
+        chapter.setCreatedAt(Instant.now());
 
         return chapterRepository.save(chapter);
     }
 
-}
+    // Lấy số lượng chương hiện tại của audiobook
+    public int getChapterCount(Integer audiobookId) {
+        return chapterRepository.countByAudiobookId(audiobookId);
+    }
 
+    // Đặt giới hạn số chương cho audiobook
+    public Audiobook setChapterLimit(Integer audiobookId, Integer chapterLimit) {
+        Audiobook audiobook = audiobookService.getAudiobookById(audiobookId);
+        audiobook.setChapterLimit(chapterLimit);
+        return audiobookService.save(audiobook); // gọi đúng service
+    }
+}
