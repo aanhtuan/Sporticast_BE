@@ -110,5 +110,22 @@ public class ManagerOfAdmin {
             return ResponseEntity.badRequest().body("❌ " + e.getMessage());
         }
     }
+    @GetMapping("/{id}/chapter-count")
+    public ResponseEntity<Integer> getChapterCount(@PathVariable("id") Integer audiobookId) {
+        int count = ad_ChapterService.getChapterCount(audiobookId);
+        return ResponseEntity.ok(count);
+    }
+    @GetMapping("/{id}/chapter-limit")
+    public ResponseEntity<Integer> getChapterLimit(@PathVariable("id") Integer audiobookId) {
+        int limit = ad_ChapterService.getChapterLimit(audiobookId);
+        return ResponseEntity.ok(limit);
+    }
+    // Lấy thông tin audiobook theo ID
+    @GetMapping("/audiobooks/{id}")
+    public ResponseEntity<Audiobook> getAudiobookById(@PathVariable("id") Integer id) {
+        Audiobook audiobook = audioBookService.getAudiobookById(id);  // Gọi từ service
+        return ResponseEntity.ok(audiobook);
+    }
+
 }
 

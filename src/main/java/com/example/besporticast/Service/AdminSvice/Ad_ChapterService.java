@@ -37,6 +37,12 @@ public class Ad_ChapterService {
         return chapterRepository.save(chapter);
     }
 
+    // Lấy số trang giới hạn hiện tại của audio book
+    public int getChapterLimit(Integer audiobookId) {
+        Audiobook audiobook = audiobookService.getAudiobookById(audiobookId);
+        return audiobook.getChapterLimit();
+    }
+
     // Lấy số lượng chương hiện tại của audiobook
     public int getChapterCount(Integer audiobookId) {
         return chapterRepository.countByAudiobookId(audiobookId);
